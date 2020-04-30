@@ -1,0 +1,16 @@
+{
+  "apikey": "wN4vO_iOsaalWZ6mDugGnz5CexpyyGkSBiMsrXaIu2JR",
+  "cos_hmac_keys": {
+    "access_key_id": "61cc3a777f7d43bc944af5e4d7fe0cb8",
+    "secret_access_key": "ec583c2b8c974ccfe04f0e3329fd3338a320c78241f953e4"
+  },
+  "endpoints": "https://control.cloud-object-storage.cloud.ibm.com/v2/endpoints",
+  "iam_apikey_description": "Auto-generated for key 61cc3a77-7f7d-43bc-944a-f5e4d7fe0cb8",
+  "iam_apikey_name": "이재근",
+  "iam_role_crn": "crn:v1:bluemix:public:iam::::serviceRole:Writer",
+  "iam_serviceid_crn": "crn:v1:bluemix:public:iam-identity::a/dc3e8e956d2548b7a0c5dff66e9ad1e1::serviceid:ServiceId-cb7f4295-4225-4541-b5f6-ce16983769d0",
+  "resource_instance_id": "crn:v1:bluemix:public:cloud-object-storage:global:a/dc3e8e956d2548b7a0c5dff66e9ad1e1:70208de3-778b-445d-ace5-86a23887f09e::"
+}
+
+
+s3.us.cloud-object-storage.appdomain.cloud
