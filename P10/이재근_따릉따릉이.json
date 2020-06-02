@@ -1,0 +1,292 @@
+{
+  "intents": [
+    {
+      "intent": "use",
+      "examples": [
+        {
+          "text": "따릉이를 이용하는 방법은 ?"
+        },
+        {
+          "text": "따릉이 어떻게 쓰지"
+        },
+        {
+          "text": "따릉이 어떻게 써"
+        }
+      ],
+      "description": "이용방법 안내"
+    },
+    {
+      "intent": "Return",
+      "examples": [
+        {
+          "text": "다썼어"
+        },
+        {
+          "text": "따릉이 반납"
+        },
+        {
+          "text": "따릉이 반납하려면"
+        },
+        {
+          "text": "따릉이 반납은 어떻게"
+        },
+        {
+          "text": "반납"
+        }
+      ],
+      "description": "반납방법"
+    }
+  ],
+  "entities": [
+    {
+      "entity": "member",
+      "values": [
+        {
+          "type": "synonyms",
+          "value": "비회원",
+          "synonyms": [
+            "비회원"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "회원",
+          "synonyms": [
+            "회원가입,회원"
+          ]
+        }
+      ],
+      "fuzzy_match": true
+    },
+    {
+      "entity": "yes_or_no",
+      "values": [
+        {
+          "type": "synonyms",
+          "value": "yes",
+          "synonyms": [
+            "네",
+            "좋아요",
+            "ㅇㅇ",
+            "넵",
+            "넹",
+            "해주세요"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "no",
+          "synonyms": [
+            "ㄴㄴ",
+            "아니요",
+            "아뇨",
+            "아니",
+            "no",
+            "싫어"
+          ]
+        }
+      ],
+      "fuzzy_match": true
+    }
+  ],
+  "metadata": {
+    "api_version": {
+      "major_version": "v2",
+      "minor_version": "2018-11-08"
+    }
+  },
+  "dialog_nodes": [
+    {
+      "type": "standard",
+      "title": "비회원으로 이용하기",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "비회원으로 이용하시는 방법 :  이용권 구매 > 자전거 대여 > 자전거 반납 순으로 이용 가능 합니다."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          },
+          {
+            "title": "이용권 구매하는 방법이 궁금하세요 ?",
+            "options": [
+              {
+                "label": "네 알려주세요",
+                "value": {
+                  "input": {
+                    "text": "yes"
+                  }
+                }
+              },
+              {
+                "label": "아니요 괜찮아요",
+                "value": {
+                  "input": {
+                    "text": "no"
+                  }
+                }
+              }
+            ],
+            "response_type": "option"
+          }
+        ]
+      },
+      "parent": "node_10_1591019804612",
+      "conditions": "@member:비회원 && @yes_or_no:yes",
+      "dialog_node": "node_9_1591019940699",
+      "previous_sibling": "node_7_1591020257747"
+    },
+    {
+      "type": "standard",
+      "title": "회원으로 이용하기",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "회원가입 > 이용권 구매 > 자전거 반납 순으로 이용가능합니다."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_10_1591019804612",
+      "conditions": "@member:회원",
+      "dialog_node": "node_7_1591020257747"
+    },
+    {
+      "type": "standard",
+      "title": "반납방법 안내",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "따릉이를 반납하는 방법은 : 반납 위치 확인 > 주차 > 반납 완료 후 승인까지 기다리기 순으로 진행됩니다 !"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "conditions": "#Return",
+      "dialog_node": "node_7_1591020708174",
+      "previous_sibling": "환영 인사"
+    },
+    {
+      "type": "standard",
+      "title": "기타",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "알아듣기 쉽게 다시 말씀해주시면 좋겠어요."
+              },
+              {
+                "text": "다시 말씀해주시겠어요? 이해가 잘 안 되네요."
+              },
+              {
+                "text": "무슨 뜻인지 모르겠어요."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "conditions": "anything_else",
+      "dialog_node": "기타",
+      "previous_sibling": "node_10_1591019804612",
+      "disambiguation_opt_out": true
+    },
+    {
+      "type": "standard",
+      "title": "이용방법 안내",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "이용하시는 방법은 회원, 비회원 두가지 방법이 있습니다."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          },
+          {
+            "title": "회원으로 이용하고 싶으신가요, 비회원으로 이용하고싶으신가요 ?",
+            "options": [
+              {
+                "label": "회원",
+                "value": {
+                  "input": {
+                    "text": "회원"
+                  }
+                }
+              },
+              {
+                "label": "비회원",
+                "value": {
+                  "input": {
+                    "text": "비회원"
+                  }
+                }
+              }
+            ],
+            "response_type": "option"
+          }
+        ]
+      },
+      "conditions": "#use",
+      "dialog_node": "node_10_1591019804612",
+      "previous_sibling": "node_7_1591020708174"
+    },
+    {
+      "type": "standard",
+      "title": "환영 인사",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "안녕하세요? 무엇을 도와드릴까요?"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "conditions": "welcome",
+      "dialog_node": "환영 인사"
+    }
+  ],
+  "counterexamples": [],
+  "system_settings": {
+    "disambiguation": {
+      "prompt": "당신이 의도한 것은",
+      "enabled": true,
+      "randomize": true,
+      "max_suggestions": 5,
+      "suggestion_text_policy": "title",
+      "none_of_the_above_prompt": "해당 항목 없음"
+    },
+    "system_entities": {
+      "enabled": true
+    },
+    "human_agent_assist": {
+      "prompt": "당신이 의도한 것은"
+    }
+  },
+  "learning_opt_out": false,
+  "name": "따릉따릉이_FAQ",
+  "language": "ko",
+  "description": ""
+}
