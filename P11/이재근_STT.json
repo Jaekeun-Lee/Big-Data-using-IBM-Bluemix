@@ -1,0 +1,540 @@
+{
+ "results": [
+  {
+   "word_alternatives": [
+    {
+     "start_time": 0,
+     "alternatives": [
+      {
+       "confidence": 0.42,
+       "word": "이십대"
+      },
+      {
+       "confidence": 0.27,
+       "word": "E."
+      },
+      {
+       "confidence": 0.18,
+       "word": "이십"
+      },
+      {
+       "confidence": 0.08,
+       "word": "이"
+      },
+      {
+       "confidence": 0.02,
+       "word": "이십대가"
+      },
+      {
+       "confidence": 0.02,
+       "word": "이."
+      }
+     ],
+     "end_time": 0.17
+    },
+    {
+     "start_time": 0.53,
+     "alternatives": [
+      {
+       "confidence": 0.99,
+       "word": "월드컵에서"
+      }
+     ],
+     "end_time": 1.19
+    },
+    {
+     "start_time": 1.19,
+     "alternatives": [
+      {
+       "confidence": 0.33,
+       "word": "오래"
+      },
+      {
+       "confidence": 0.27,
+       "word": "우리의"
+      },
+      {
+       "confidence": 0.21,
+       "word": "올해"
+      },
+      {
+       "confidence": 0.12,
+       "word": "우리"
+      }
+     ],
+     "end_time": 1.43
+    },
+    {
+     "start_time": 1.43,
+     "alternatives": [
+      {
+       "confidence": 1,
+       "word": "태극전사"
+      }
+     ],
+     "end_time": 2.02
+    },
+    {
+     "start_time": 2.02,
+     "alternatives": [
+      {
+       "confidence": 0.64,
+       "word": "들이"
+      },
+      {
+       "confidence": 0.3,
+       "word": "드리"
+      },
+      {
+       "confidence": 0.04,
+       "word": "대리"
+      }
+     ],
+     "end_time": 2.4
+    },
+    {
+     "start_time": 2.48,
+     "alternatives": [
+      {
+       "confidence": 1,
+       "word": "사상"
+      }
+     ],
+     "end_time": 3.08
+    },
+    {
+     "start_time": 3.08,
+     "alternatives": [
+      {
+       "confidence": 1,
+       "word": "첫"
+      }
+     ],
+     "end_time": 3.37
+    },
+    {
+     "start_time": 3.37,
+     "alternatives": [
+      {
+       "confidence": 0.99,
+       "word": "준우승을"
+      },
+      {
+       "confidence": 0.01,
+       "word": "운송을"
+      }
+     ],
+     "end_time": 4.08
+    },
+    {
+     "start_time": 4.08,
+     "alternatives": [
+      {
+       "confidence": 1,
+       "word": "차지하며"
+      }
+     ],
+     "end_time": 4.64
+    },
+    {
+     "start_time": 4.64,
+     "alternatives": [
+      {
+       "confidence": 0.99,
+       "word": "새"
+      },
+      {
+       "confidence": 0.01,
+       "word": "제"
+      }
+     ],
+     "end_time": 4.78
+    },
+    {
+     "start_time": 4.78,
+     "alternatives": [
+      {
+       "confidence": 1,
+       "word": "역사를"
+      }
+     ],
+     "end_time": 5.12
+    },
+    {
+     "start_time": 5.12,
+     "alternatives": [
+      {
+       "confidence": 0.99,
+       "word": "썼습니다"
+      },
+      {
+       "confidence": 0.01,
+       "word": "있었습니다"
+      }
+     ],
+     "end_time": 5.72
+    },
+    {
+     "start_time": 6.16,
+     "alternatives": [
+      {
+       "confidence": 1,
+       "word": "비록"
+      }
+     ],
+     "end_time": 6.47
+    },
+    {
+     "start_time": 6.47,
+     "alternatives": [
+      {
+       "confidence": 0.5,
+       "word": "우승트로피를"
+      },
+      {
+       "confidence": 0.48,
+       "word": "무승부로"
+      },
+      {
+       "confidence": 0.02,
+       "word": "우승"
+      }
+     ],
+     "end_time": 7.11
+    },
+    {
+     "start_time": 7.35,
+     "alternatives": [
+      {
+       "confidence": 1,
+       "word": "놓쳤지만"
+      }
+     ],
+     "end_time": 8.14
+    },
+    {
+     "start_time": 8.39,
+     "alternatives": [
+      {
+       "confidence": 1,
+       "word": "그래도"
+      }
+     ],
+     "end_time": 8.97
+    },
+    {
+     "start_time": 9.02,
+     "alternatives": [
+      {
+       "confidence": 1,
+       "word": "정말"
+      }
+     ],
+     "end_time": 9.44
+    },
+    {
+     "start_time": 9.44,
+     "alternatives": [
+      {
+       "confidence": 1,
+       "word": "잘"
+      }
+     ],
+     "end_time": 9.66
+    },
+    {
+     "start_time": 9.66,
+     "alternatives": [
+      {
+       "confidence": 0.64,
+       "word": "먹었습니다"
+      },
+      {
+       "confidence": 0.34,
+       "word": "썼습니다"
+      },
+      {
+       "confidence": 0.03,
+       "word": "세웠습니다"
+      }
+     ],
+     "end_time": 10.31
+    },
+    {
+     "start_time": 10.67,
+     "alternatives": [
+      {
+       "confidence": 1,
+       "word": "이번"
+      }
+     ],
+     "end_time": 10.95
+    },
+    {
+     "start_time": 10.95,
+     "alternatives": [
+      {
+       "confidence": 1,
+       "word": "대회를"
+      }
+     ],
+     "end_time": 11.23
+    },
+    {
+     "start_time": 11.23,
+     "alternatives": [
+      {
+       "confidence": 1,
+       "word": "통해"
+      }
+     ],
+     "end_time": 11.57
+    },
+    {
+     "start_time": 11.57,
+     "alternatives": [
+      {
+       "confidence": 1,
+       "word": "한국"
+      }
+     ],
+     "end_time": 12.05
+    },
+    {
+     "start_time": 12.05,
+     "alternatives": [
+      {
+       "confidence": 0.75,
+       "word": "축구의"
+      },
+      {
+       "confidence": 0.25,
+       "word": "축구에"
+      }
+     ],
+     "end_time": 12.41
+    },
+    {
+     "start_time": 12.41,
+     "alternatives": [
+      {
+       "confidence": 1,
+       "word": "밝은"
+      }
+     ],
+     "end_time": 12.9
+    },
+    {
+     "start_time": 12.9,
+     "alternatives": [
+      {
+       "confidence": 1,
+       "word": "미래를"
+      }
+     ],
+     "end_time": 13.28
+    },
+    {
+     "start_time": 13.28,
+     "alternatives": [
+      {
+       "confidence": 0.94,
+       "word": "봤다는"
+      },
+      {
+       "confidence": 0.06,
+       "word": "받았다는"
+      }
+     ],
+     "end_time": 13.73
+    },
+    {
+     "start_time": 13.73,
+     "alternatives": [
+      {
+       "confidence": 1,
+       "word": "분들이"
+      }
+     ],
+     "end_time": 14.01
+    },
+    {
+     "start_time": 14.01,
+     "alternatives": [
+      {
+       "confidence": 1,
+       "word": "많습니다"
+      }
+     ],
+     "end_time": 14.65
+    }
+   ],
+   "keywords_result": {},
+   "alternatives": [
+    {
+     "timestamps": [
+      [
+       "E.",
+       0,
+       0.17
+      ],
+      [
+       "C.",
+       0.17,
+       0.29
+      ],
+      [
+       "J.",
+       0.29,
+       0.53
+      ],
+      [
+       "월드컵에서",
+       0.53,
+       1.19
+      ],
+      [
+       "오래",
+       1.19,
+       1.43
+      ],
+      [
+       "태극전사",
+       1.43,
+       2.02
+      ],
+      [
+       "들이",
+       2.02,
+       2.4
+      ],
+      [
+       "사상",
+       2.48,
+       3.08
+      ],
+      [
+       "첫",
+       3.08,
+       3.37
+      ],
+      [
+       "준우승을",
+       3.37,
+       4.08
+      ],
+      [
+       "차지하며",
+       4.08,
+       4.64
+      ],
+      [
+       "새",
+       4.64,
+       4.78
+      ],
+      [
+       "역사를",
+       4.78,
+       5.12
+      ],
+      [
+       "썼습니다",
+       5.12,
+       5.72
+      ],
+      [
+       "비록",
+       6.16,
+       6.47
+      ],
+      [
+       "우승트로피를",
+       6.47,
+       7.35
+      ],
+      [
+       "놓쳤지만",
+       7.35,
+       8.14
+      ],
+      [
+       "그래도",
+       8.39,
+       8.97
+      ],
+      [
+       "정말",
+       9.02,
+       9.44
+      ],
+      [
+       "잘",
+       9.44,
+       9.66
+      ],
+      [
+       "먹었습니다",
+       9.66,
+       10.31
+      ],
+      [
+       "이번",
+       10.67,
+       10.95
+      ],
+      [
+       "대회를",
+       10.95,
+       11.23
+      ],
+      [
+       "통해",
+       11.23,
+       11.57
+      ],
+      [
+       "한국",
+       11.57,
+       12.05
+      ],
+      [
+       "축구의",
+       12.05,
+       12.41
+      ],
+      [
+       "밝은",
+       12.41,
+       12.9
+      ],
+      [
+       "미래를",
+       12.9,
+       13.28
+      ],
+      [
+       "봤다는",
+       13.28,
+       13.73
+      ],
+      [
+       "분들이",
+       13.73,
+       14.01
+      ],
+      [
+       "많습니다",
+       14.01,
+       14.65
+      ]
+     ],
+     "confidence": 0.84,
+     "transcript": "E. C. J. 월드컵에서 오래 태극전사 들이 사상 첫 준우승을 차지하며 새 역사를 썼습니다 비록 우승트로피를 놓쳤지만 그래도 정말 잘 먹었습니다 이번 대회를 통해 한국 축구의 밝은 미래를 봤다는 분들이 많습니다 "
+    }
+   ],
+   "final": true
+  }
+ ],
+ "result_index": 0
+}
