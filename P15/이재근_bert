@@ -1,0 +1,849 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "name": "20newsgroups-BERT.ipynb의 사본",
+      "provenance": [],
+      "collapsed_sections": []
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "accelerator": "GPU"
+  },
+  "cells": [
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "hQ474pWuFi5e",
+        "colab_type": "code",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 1000
+        },
+        "outputId": "22a026b3-aa1a-4439-be29-7270b45af4e1"
+      },
+      "source": [
+        "# install ktrain on Google Colab\n",
+        "!pip3 install ktrain"
+      ],
+      "execution_count": 1,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "Collecting ktrain\n",
+            "\u001b[?25l  Downloading https://files.pythonhosted.org/packages/12/11/49bdde1b08a210365c04367e84d3fb1489db6f4b262358a10719962891a2/ktrain-0.16.3.tar.gz (25.2MB)\n",
+            "\u001b[K     |████████████████████████████████| 25.2MB 129kB/s \n",
+            "\u001b[?25hCollecting tensorflow==2.1.0\n",
+            "\u001b[?25l  Downloading https://files.pythonhosted.org/packages/85/d4/c0cd1057b331bc38b65478302114194bd8e1b9c2bbc06e300935c0e93d90/tensorflow-2.1.0-cp36-cp36m-manylinux2010_x86_64.whl (421.8MB)\n",
+            "\u001b[K     |████████████████████████████████| 421.8MB 20kB/s \n",
+            "\u001b[?25hCollecting scikit-learn==0.21.3\n",
+            "\u001b[?25l  Downloading https://files.pythonhosted.org/packages/a0/c5/d2238762d780dde84a20b8c761f563fe882b88c5a5fb03c056547c442a19/scikit_learn-0.21.3-cp36-cp36m-manylinux1_x86_64.whl (6.7MB)\n",
+            "\u001b[K     |████████████████████████████████| 6.7MB 35.9MB/s \n",
+            "\u001b[?25hRequirement already satisfied: matplotlib>=3.0.0 in /usr/local/lib/python3.6/dist-packages (from ktrain) (3.2.1)\n",
+            "Requirement already satisfied: pandas>=1.0.1 in /usr/local/lib/python3.6/dist-packages (from ktrain) (1.0.4)\n",
+            "Requirement already satisfied: fastprogress>=0.1.21 in /usr/local/lib/python3.6/dist-packages (from ktrain) (0.2.3)\n",
+            "Collecting keras_bert>=0.81.0\n",
+            "  Downloading https://files.pythonhosted.org/packages/ec/08/bffa03eb899b20bfb60553e4503f8bac00b83d415bc6ead08f6b447e8aaa/keras-bert-0.84.0.tar.gz\n",
+            "Requirement already satisfied: requests in /usr/local/lib/python3.6/dist-packages (from ktrain) (2.23.0)\n",
+            "Requirement already satisfied: joblib in /usr/local/lib/python3.6/dist-packages (from ktrain) (0.15.1)\n",
+            "Collecting langdetect\n",
+            "\u001b[?25l  Downloading https://files.pythonhosted.org/packages/56/a3/8407c1e62d5980188b4acc45ef3d94b933d14a2ebc9ef3505f22cf772570/langdetect-1.0.8.tar.gz (981kB)\n",
+            "\u001b[K     |████████████████████████████████| 983kB 22.7MB/s \n",
+            "\u001b[?25hRequirement already satisfied: jieba in /usr/local/lib/python3.6/dist-packages (from ktrain) (0.42.1)\n",
+            "Collecting cchardet==2.1.5\n",
+            "\u001b[?25l  Downloading https://files.pythonhosted.org/packages/fa/4e/847feebfc3e71c773b23ee06c74687b8c50a5a6d6aaff452a0a4f4eb9a32/cchardet-2.1.5-cp36-cp36m-manylinux1_x86_64.whl (241kB)\n",
+            "\u001b[K     |████████████████████████████████| 245kB 58.0MB/s \n",
+            "\u001b[?25hRequirement already satisfied: networkx>=2.3 in /usr/local/lib/python3.6/dist-packages (from ktrain) (2.4)\n",
+            "Requirement already satisfied: bokeh in /usr/local/lib/python3.6/dist-packages (from ktrain) (1.4.0)\n",
+            "Collecting seqeval\n",
+            "  Downloading https://files.pythonhosted.org/packages/34/91/068aca8d60ce56dd9ba4506850e876aba5e66a6f2f29aa223224b50df0de/seqeval-0.0.12.tar.gz\n",
+            "Requirement already satisfied: packaging in /usr/local/lib/python3.6/dist-packages (from ktrain) (20.4)\n",
+            "Requirement already satisfied: tensorflow_datasets in /usr/local/lib/python3.6/dist-packages (from ktrain) (2.1.0)\n",
+            "Collecting transformers>=2.11.0\n",
+            "\u001b[?25l  Downloading https://files.pythonhosted.org/packages/48/35/ad2c5b1b8f99feaaf9d7cdadaeef261f098c6e1a6a2935d4d07662a6b780/transformers-2.11.0-py3-none-any.whl (674kB)\n",
+            "\u001b[K     |████████████████████████████████| 675kB 54.5MB/s \n",
+            "\u001b[?25hRequirement already satisfied: ipython in /usr/local/lib/python3.6/dist-packages (from ktrain) (5.5.0)\n",
+            "Collecting syntok\n",
+            "  Downloading https://files.pythonhosted.org/packages/8c/76/a49e73a04b3e3a14ce232e8e28a1587f8108baa665644fe8c40e307e792e/syntok-1.3.1.tar.gz\n",
+            "Collecting whoosh\n",
+            "\u001b[?25l  Downloading https://files.pythonhosted.org/packages/ba/19/24d0f1f454a2c1eb689ca28d2f178db81e5024f42d82729a4ff6771155cf/Whoosh-2.7.4-py2.py3-none-any.whl (468kB)\n",
+            "\u001b[K     |████████████████████████████████| 471kB 60.5MB/s \n",
+            "\u001b[?25hRequirement already satisfied: astor>=0.6.0 in /usr/local/lib/python3.6/dist-packages (from tensorflow==2.1.0->ktrain) (0.8.1)\n",
+            "Requirement already satisfied: keras-preprocessing>=1.1.0 in /usr/local/lib/python3.6/dist-packages (from tensorflow==2.1.0->ktrain) (1.1.2)\n",
+            "Collecting tensorboard<2.2.0,>=2.1.0\n",
+            "\u001b[?25l  Downloading https://files.pythonhosted.org/packages/d9/41/bbf49b61370e4f4d245d4c6051dfb6db80cec672605c91b1652ac8cc3d38/tensorboard-2.1.1-py3-none-any.whl (3.8MB)\n",
+            "\u001b[K     |████████████████████████████████| 3.9MB 56.8MB/s \n",
+            "\u001b[?25hRequirement already satisfied: six>=1.12.0 in /usr/local/lib/python3.6/dist-packages (from tensorflow==2.1.0->ktrain) (1.12.0)\n",
+            "Collecting tensorflow-estimator<2.2.0,>=2.1.0rc0\n",
+            "\u001b[?25l  Downloading https://files.pythonhosted.org/packages/18/90/b77c328a1304437ab1310b463e533fa7689f4bfc41549593056d812fab8e/tensorflow_estimator-2.1.0-py2.py3-none-any.whl (448kB)\n",
+            "\u001b[K     |████████████████████████████████| 450kB 51.7MB/s \n",
+            "\u001b[?25hRequirement already satisfied: keras-applications>=1.0.8 in /usr/local/lib/python3.6/dist-packages (from tensorflow==2.1.0->ktrain) (1.0.8)\n",
+            "Requirement already satisfied: protobuf>=3.8.0 in /usr/local/lib/python3.6/dist-packages (from tensorflow==2.1.0->ktrain) (3.10.0)\n",
+            "Requirement already satisfied: google-pasta>=0.1.6 in /usr/local/lib/python3.6/dist-packages (from tensorflow==2.1.0->ktrain) (0.2.0)\n",
+            "Requirement already satisfied: termcolor>=1.1.0 in /usr/local/lib/python3.6/dist-packages (from tensorflow==2.1.0->ktrain) (1.1.0)\n",
+            "Requirement already satisfied: wrapt>=1.11.1 in /usr/local/lib/python3.6/dist-packages (from tensorflow==2.1.0->ktrain) (1.12.1)\n",
+            "Requirement already satisfied: opt-einsum>=2.3.2 in /usr/local/lib/python3.6/dist-packages (from tensorflow==2.1.0->ktrain) (3.2.1)\n",
+            "Requirement already satisfied: absl-py>=0.7.0 in /usr/local/lib/python3.6/dist-packages (from tensorflow==2.1.0->ktrain) (0.9.0)\n",
+            "Requirement already satisfied: wheel>=0.26; python_version >= \"3\" in /usr/local/lib/python3.6/dist-packages (from tensorflow==2.1.0->ktrain) (0.34.2)\n",
+            "Requirement already satisfied: numpy<2.0,>=1.16.0 in /usr/local/lib/python3.6/dist-packages (from tensorflow==2.1.0->ktrain) (1.18.5)\n",
+            "Collecting gast==0.2.2\n",
+            "  Downloading https://files.pythonhosted.org/packages/4e/35/11749bf99b2d4e3cceb4d55ca22590b0d7c2c62b9de38ac4a4a7f4687421/gast-0.2.2.tar.gz\n",
+            "Requirement already satisfied: grpcio>=1.8.6 in /usr/local/lib/python3.6/dist-packages (from tensorflow==2.1.0->ktrain) (1.29.0)\n",
+            "Requirement already satisfied: scipy==1.4.1; python_version >= \"3\" in /usr/local/lib/python3.6/dist-packages (from tensorflow==2.1.0->ktrain) (1.4.1)\n",
+            "Requirement already satisfied: pyparsing!=2.0.4,!=2.1.2,!=2.1.6,>=2.0.1 in /usr/local/lib/python3.6/dist-packages (from matplotlib>=3.0.0->ktrain) (2.4.7)\n",
+            "Requirement already satisfied: kiwisolver>=1.0.1 in /usr/local/lib/python3.6/dist-packages (from matplotlib>=3.0.0->ktrain) (1.2.0)\n",
+            "Requirement already satisfied: cycler>=0.10 in /usr/local/lib/python3.6/dist-packages (from matplotlib>=3.0.0->ktrain) (0.10.0)\n",
+            "Requirement already satisfied: python-dateutil>=2.1 in /usr/local/lib/python3.6/dist-packages (from matplotlib>=3.0.0->ktrain) (2.8.1)\n",
+            "Requirement already satisfied: pytz>=2017.2 in /usr/local/lib/python3.6/dist-packages (from pandas>=1.0.1->ktrain) (2018.9)\n",
+            "Requirement already satisfied: Keras in /usr/local/lib/python3.6/dist-packages (from keras_bert>=0.81.0->ktrain) (2.3.1)\n",
+            "Collecting keras-transformer>=0.37.0\n",
+            "  Downloading https://files.pythonhosted.org/packages/8a/2b/c465241bd3f37a3699246827ff4ad7974c6edeaa69cf9cdcff2fd1d3ba46/keras-transformer-0.37.0.tar.gz\n",
+            "Requirement already satisfied: idna<3,>=2.5 in /usr/local/lib/python3.6/dist-packages (from requests->ktrain) (2.9)\n",
+            "Requirement already satisfied: certifi>=2017.4.17 in /usr/local/lib/python3.6/dist-packages (from requests->ktrain) (2020.4.5.1)\n",
+            "Requirement already satisfied: chardet<4,>=3.0.2 in /usr/local/lib/python3.6/dist-packages (from requests->ktrain) (3.0.4)\n",
+            "Requirement already satisfied: urllib3!=1.25.0,!=1.25.1,<1.26,>=1.21.1 in /usr/local/lib/python3.6/dist-packages (from requests->ktrain) (1.24.3)\n",
+            "Requirement already satisfied: decorator>=4.3.0 in /usr/local/lib/python3.6/dist-packages (from networkx>=2.3->ktrain) (4.4.2)\n",
+            "Requirement already satisfied: Jinja2>=2.7 in /usr/local/lib/python3.6/dist-packages (from bokeh->ktrain) (2.11.2)\n",
+            "Requirement already satisfied: pillow>=4.0 in /usr/local/lib/python3.6/dist-packages (from bokeh->ktrain) (7.0.0)\n",
+            "Requirement already satisfied: PyYAML>=3.10 in /usr/local/lib/python3.6/dist-packages (from bokeh->ktrain) (3.13)\n",
+            "Requirement already satisfied: tornado>=4.3 in /usr/local/lib/python3.6/dist-packages (from bokeh->ktrain) (4.5.3)\n",
+            "Requirement already satisfied: tqdm in /usr/local/lib/python3.6/dist-packages (from tensorflow_datasets->ktrain) (4.41.1)\n",
+            "Requirement already satisfied: attrs>=18.1.0 in /usr/local/lib/python3.6/dist-packages (from tensorflow_datasets->ktrain) (19.3.0)\n",
+            "Requirement already satisfied: promise in /usr/local/lib/python3.6/dist-packages (from tensorflow_datasets->ktrain) (2.3)\n",
+            "Requirement already satisfied: tensorflow-metadata in /usr/local/lib/python3.6/dist-packages (from tensorflow_datasets->ktrain) (0.22.1)\n",
+            "Requirement already satisfied: dill in /usr/local/lib/python3.6/dist-packages (from tensorflow_datasets->ktrain) (0.3.1.1)\n",
+            "Requirement already satisfied: future in /usr/local/lib/python3.6/dist-packages (from tensorflow_datasets->ktrain) (0.16.0)\n",
+            "Requirement already satisfied: regex!=2019.12.17 in /usr/local/lib/python3.6/dist-packages (from transformers>=2.11.0->ktrain) (2019.12.20)\n",
+            "Collecting sentencepiece\n",
+            "\u001b[?25l  Downloading https://files.pythonhosted.org/packages/d4/a4/d0a884c4300004a78cca907a6ff9a5e9fe4f090f5d95ab341c53d28cbc58/sentencepiece-0.1.91-cp36-cp36m-manylinux1_x86_64.whl (1.1MB)\n",
+            "\u001b[K     |████████████████████████████████| 1.1MB 47.9MB/s \n",
+            "\u001b[?25hCollecting sacremoses\n",
+            "\u001b[?25l  Downloading https://files.pythonhosted.org/packages/7d/34/09d19aff26edcc8eb2a01bed8e98f13a1537005d31e95233fd48216eed10/sacremoses-0.0.43.tar.gz (883kB)\n",
+            "\u001b[K     |████████████████████████████████| 890kB 48.3MB/s \n",
+            "\u001b[?25hRequirement already satisfied: filelock in /usr/local/lib/python3.6/dist-packages (from transformers>=2.11.0->ktrain) (3.0.12)\n",
+            "Collecting tokenizers==0.7.0\n",
+            "\u001b[?25l  Downloading https://files.pythonhosted.org/packages/14/e5/a26eb4716523808bb0a799fcfdceb6ebf77a18169d9591b2f46a9adb87d9/tokenizers-0.7.0-cp36-cp36m-manylinux1_x86_64.whl (3.8MB)\n",
+            "\u001b[K     |████████████████████████████████| 3.8MB 51.3MB/s \n",
+            "\u001b[?25hRequirement already satisfied: dataclasses; python_version < \"3.7\" in /usr/local/lib/python3.6/dist-packages (from transformers>=2.11.0->ktrain) (0.7)\n",
+            "Requirement already satisfied: simplegeneric>0.8 in /usr/local/lib/python3.6/dist-packages (from ipython->ktrain) (0.8.1)\n",
+            "Requirement already satisfied: traitlets>=4.2 in /usr/local/lib/python3.6/dist-packages (from ipython->ktrain) (4.3.3)\n",
+            "Requirement already satisfied: pexpect; sys_platform != \"win32\" in /usr/local/lib/python3.6/dist-packages (from ipython->ktrain) (4.8.0)\n",
+            "Requirement already satisfied: pygments in /usr/local/lib/python3.6/dist-packages (from ipython->ktrain) (2.1.3)\n",
+            "Requirement already satisfied: setuptools>=18.5 in /usr/local/lib/python3.6/dist-packages (from ipython->ktrain) (47.1.1)\n",
+            "Requirement already satisfied: prompt-toolkit<2.0.0,>=1.0.4 in /usr/local/lib/python3.6/dist-packages (from ipython->ktrain) (1.0.18)\n",
+            "Requirement already satisfied: pickleshare in /usr/local/lib/python3.6/dist-packages (from ipython->ktrain) (0.7.5)\n",
+            "Requirement already satisfied: markdown>=2.6.8 in /usr/local/lib/python3.6/dist-packages (from tensorboard<2.2.0,>=2.1.0->tensorflow==2.1.0->ktrain) (3.2.2)\n",
+            "Requirement already satisfied: google-auth-oauthlib<0.5,>=0.4.1 in /usr/local/lib/python3.6/dist-packages (from tensorboard<2.2.0,>=2.1.0->tensorflow==2.1.0->ktrain) (0.4.1)\n",
+            "Requirement already satisfied: werkzeug>=0.11.15 in /usr/local/lib/python3.6/dist-packages (from tensorboard<2.2.0,>=2.1.0->tensorflow==2.1.0->ktrain) (1.0.1)\n",
+            "Requirement already satisfied: google-auth<2,>=1.6.3 in /usr/local/lib/python3.6/dist-packages (from tensorboard<2.2.0,>=2.1.0->tensorflow==2.1.0->ktrain) (1.7.2)\n",
+            "Requirement already satisfied: h5py in /usr/local/lib/python3.6/dist-packages (from keras-applications>=1.0.8->tensorflow==2.1.0->ktrain) (2.10.0)\n",
+            "Collecting keras-pos-embd>=0.11.0\n",
+            "  Downloading https://files.pythonhosted.org/packages/09/70/b63ed8fc660da2bb6ae29b9895401c628da5740c048c190b5d7107cadd02/keras-pos-embd-0.11.0.tar.gz\n",
+            "Collecting keras-multi-head>=0.27.0\n",
+            "  Downloading https://files.pythonhosted.org/packages/e6/32/45adf2549450aca7867deccfa04af80a0ab1ca139af44b16bc669e0e09cd/keras-multi-head-0.27.0.tar.gz\n",
+            "Collecting keras-layer-normalization>=0.14.0\n",
+            "  Downloading https://files.pythonhosted.org/packages/a4/0e/d1078df0494bac9ce1a67954e5380b6e7569668f0f3b50a9531c62c1fc4a/keras-layer-normalization-0.14.0.tar.gz\n",
+            "Collecting keras-position-wise-feed-forward>=0.6.0\n",
+            "  Downloading https://files.pythonhosted.org/packages/e3/59/f0faa1037c033059e7e9e7758e6c23b4d1c0772cd48de14c4b6fd4033ad5/keras-position-wise-feed-forward-0.6.0.tar.gz\n",
+            "Collecting keras-embed-sim>=0.7.0\n",
+            "  Downloading https://files.pythonhosted.org/packages/bc/20/735fd53f6896e2af63af47e212601c1b8a7a80d00b6126c388c9d1233892/keras-embed-sim-0.7.0.tar.gz\n",
+            "Requirement already satisfied: MarkupSafe>=0.23 in /usr/local/lib/python3.6/dist-packages (from Jinja2>=2.7->bokeh->ktrain) (1.1.1)\n",
+            "Requirement already satisfied: googleapis-common-protos in /usr/local/lib/python3.6/dist-packages (from tensorflow-metadata->tensorflow_datasets->ktrain) (1.52.0)\n",
+            "Requirement already satisfied: click in /usr/local/lib/python3.6/dist-packages (from sacremoses->transformers>=2.11.0->ktrain) (7.1.2)\n",
+            "Requirement already satisfied: ipython-genutils in /usr/local/lib/python3.6/dist-packages (from traitlets>=4.2->ipython->ktrain) (0.2.0)\n",
+            "Requirement already satisfied: ptyprocess>=0.5 in /usr/local/lib/python3.6/dist-packages (from pexpect; sys_platform != \"win32\"->ipython->ktrain) (0.6.0)\n",
+            "Requirement already satisfied: wcwidth in /usr/local/lib/python3.6/dist-packages (from prompt-toolkit<2.0.0,>=1.0.4->ipython->ktrain) (0.2.3)\n",
+            "Requirement already satisfied: importlib-metadata; python_version < \"3.8\" in /usr/local/lib/python3.6/dist-packages (from markdown>=2.6.8->tensorboard<2.2.0,>=2.1.0->tensorflow==2.1.0->ktrain) (1.6.0)\n",
+            "Requirement already satisfied: requests-oauthlib>=0.7.0 in /usr/local/lib/python3.6/dist-packages (from google-auth-oauthlib<0.5,>=0.4.1->tensorboard<2.2.0,>=2.1.0->tensorflow==2.1.0->ktrain) (1.3.0)\n",
+            "Requirement already satisfied: pyasn1-modules>=0.2.1 in /usr/local/lib/python3.6/dist-packages (from google-auth<2,>=1.6.3->tensorboard<2.2.0,>=2.1.0->tensorflow==2.1.0->ktrain) (0.2.8)\n",
+            "Requirement already satisfied: cachetools<3.2,>=2.0.0 in /usr/local/lib/python3.6/dist-packages (from google-auth<2,>=1.6.3->tensorboard<2.2.0,>=2.1.0->tensorflow==2.1.0->ktrain) (3.1.1)\n",
+            "Requirement already satisfied: rsa<4.1,>=3.1.4 in /usr/local/lib/python3.6/dist-packages (from google-auth<2,>=1.6.3->tensorboard<2.2.0,>=2.1.0->tensorflow==2.1.0->ktrain) (4.0)\n",
+            "Collecting keras-self-attention==0.46.0\n",
+            "  Downloading https://files.pythonhosted.org/packages/15/6b/c804924a056955fa1f3ff767945187103cfc851ba9bd0fc5a6c6bc18e2eb/keras-self-attention-0.46.0.tar.gz\n",
+            "Requirement already satisfied: zipp>=0.5 in /usr/local/lib/python3.6/dist-packages (from importlib-metadata; python_version < \"3.8\"->markdown>=2.6.8->tensorboard<2.2.0,>=2.1.0->tensorflow==2.1.0->ktrain) (3.1.0)\n",
+            "Requirement already satisfied: oauthlib>=3.0.0 in /usr/local/lib/python3.6/dist-packages (from requests-oauthlib>=0.7.0->google-auth-oauthlib<0.5,>=0.4.1->tensorboard<2.2.0,>=2.1.0->tensorflow==2.1.0->ktrain) (3.1.0)\n",
+            "Requirement already satisfied: pyasn1<0.5.0,>=0.4.6 in /usr/local/lib/python3.6/dist-packages (from pyasn1-modules>=0.2.1->google-auth<2,>=1.6.3->tensorboard<2.2.0,>=2.1.0->tensorflow==2.1.0->ktrain) (0.4.8)\n",
+            "Building wheels for collected packages: ktrain, keras-bert, langdetect, seqeval, syntok, gast, keras-transformer, sacremoses, keras-pos-embd, keras-multi-head, keras-layer-normalization, keras-position-wise-feed-forward, keras-embed-sim, keras-self-attention\n",
+            "  Building wheel for ktrain (setup.py) ... \u001b[?25l\u001b[?25hdone\n",
+            "  Created wheel for ktrain: filename=ktrain-0.16.3-cp36-none-any.whl size=25246180 sha256=faaa0ff8f772c0759397ebdaa723f7f37a99d5cc93c5cbb18f4c202d0c71dcec\n",
+            "  Stored in directory: /root/.cache/pip/wheels/2b/24/21/a52cc4dcb0b438cf570e9d44c017761d41335d9af4c189ebad\n",
+            "  Building wheel for keras-bert (setup.py) ... \u001b[?25l\u001b[?25hdone\n",
+            "  Created wheel for keras-bert: filename=keras_bert-0.84.0-cp36-none-any.whl size=36139 sha256=aedda38a3a878aa24bcc18a2f48818eba918b8e23ab9e8451bce2c42ad2bad06\n",
+            "  Stored in directory: /root/.cache/pip/wheels/1f/59/04/12e95257aebfd27f7edaaf65ab7dd57b5f6cadfb183f1a4ccd\n",
+            "  Building wheel for langdetect (setup.py) ... \u001b[?25l\u001b[?25hdone\n",
+            "  Created wheel for langdetect: filename=langdetect-1.0.8-cp36-none-any.whl size=993193 sha256=eb7f3fec8dd41c0459ab0518097f1ea8c56e9f939b6c32497d736a09cdf86588\n",
+            "  Stored in directory: /root/.cache/pip/wheels/8d/b3/aa/6d99de9f3841d7d3d40a60ea06e6d669e8e5012e6c8b947a57\n",
+            "  Building wheel for seqeval (setup.py) ... \u001b[?25l\u001b[?25hdone\n",
+            "  Created wheel for seqeval: filename=seqeval-0.0.12-cp36-none-any.whl size=7424 sha256=ae9dc32742ac36a30da002a8d54b3b095a1b8c953b67b622e75397e52e9e4245\n",
+            "  Stored in directory: /root/.cache/pip/wheels/4f/32/0a/df3b340a82583566975377d65e724895b3fad101a3fb729f68\n",
+            "  Building wheel for syntok (setup.py) ... \u001b[?25l\u001b[?25hdone\n",
+            "  Created wheel for syntok: filename=syntok-1.3.1-cp36-none-any.whl size=20918 sha256=982d323bfd3925ce7598ba8277eaa233b807287935ab98cdc64def262c6bdbcc\n",
+            "  Stored in directory: /root/.cache/pip/wheels/51/c6/a4/be1920586c49469846bcd2888200bdecfe109ec421dab9be2d\n",
+            "  Building wheel for gast (setup.py) ... \u001b[?25l\u001b[?25hdone\n",
+            "  Created wheel for gast: filename=gast-0.2.2-cp36-none-any.whl size=7540 sha256=2965ecbd2609b648827c03c2d9aefa6b6afe14ae6f4ea230cf2212f0830c3f03\n",
+            "  Stored in directory: /root/.cache/pip/wheels/5c/2e/7e/a1d4d4fcebe6c381f378ce7743a3ced3699feb89bcfbdadadd\n",
+            "  Building wheel for keras-transformer (setup.py) ... \u001b[?25l\u001b[?25hdone\n",
+            "  Created wheel for keras-transformer: filename=keras_transformer-0.37.0-cp36-none-any.whl size=12942 sha256=a576a5cdb62170321777c2b71297b193f56416b3423970ee2405bc7cd58a626c\n",
+            "  Stored in directory: /root/.cache/pip/wheels/2a/f9/31/2a3289e948852ce0dd3fcd94c34bbc7eb9628842cb7110a87b\n",
+            "  Building wheel for sacremoses (setup.py) ... \u001b[?25l\u001b[?25hdone\n",
+            "  Created wheel for sacremoses: filename=sacremoses-0.0.43-cp36-none-any.whl size=893260 sha256=2487db0d3a36fefa04be341bf32f79f3835c20e0f169e69b54d544495d4517bb\n",
+            "  Stored in directory: /root/.cache/pip/wheels/29/3c/fd/7ce5c3f0666dab31a50123635e6fb5e19ceb42ce38d4e58f45\n",
+            "  Building wheel for keras-pos-embd (setup.py) ... \u001b[?25l\u001b[?25hdone\n",
+            "  Created wheel for keras-pos-embd: filename=keras_pos_embd-0.11.0-cp36-none-any.whl size=7554 sha256=08ed0e4e8d863450dd77c6cd5ec5c61b17a9772f1f4707d954059d5bd3c8cd4b\n",
+            "  Stored in directory: /root/.cache/pip/wheels/5b/a1/a0/ce6b1d49ba1a9a76f592e70cf297b05c96bc9f418146761032\n",
+            "  Building wheel for keras-multi-head (setup.py) ... \u001b[?25l\u001b[?25hdone\n",
+            "  Created wheel for keras-multi-head: filename=keras_multi_head-0.27.0-cp36-none-any.whl size=15611 sha256=ba38e65f807dda2aecff3d4d981f164d52a7a39ad6afb158e27d08a122ce4d82\n",
+            "  Stored in directory: /root/.cache/pip/wheels/b5/b4/49/0a0c27dcb93c13af02fea254ff51d1a43a924dd4e5b7a7164d\n",
+            "  Building wheel for keras-layer-normalization (setup.py) ... \u001b[?25l\u001b[?25hdone\n",
+            "  Created wheel for keras-layer-normalization: filename=keras_layer_normalization-0.14.0-cp36-none-any.whl size=5268 sha256=e2013db28058a59a9b84a22ae3ed0bd4f44972e5c2a6ae71cf55c41646a55359\n",
+            "  Stored in directory: /root/.cache/pip/wheels/54/80/22/a638a7d406fd155e507aa33d703e3fa2612b9eb7bb4f4fe667\n",
+            "  Building wheel for keras-position-wise-feed-forward (setup.py) ... \u001b[?25l\u001b[?25hdone\n",
+            "  Created wheel for keras-position-wise-feed-forward: filename=keras_position_wise_feed_forward-0.6.0-cp36-none-any.whl size=5623 sha256=f978e6868dc6a577225d6225bebd734b6b8556eeaea9c5fe047075dda8c636e2\n",
+            "  Stored in directory: /root/.cache/pip/wheels/39/e2/e2/3514fef126a00574b13bc0b9e23891800158df3a3c19c96e3b\n",
+            "  Building wheel for keras-embed-sim (setup.py) ... \u001b[?25l\u001b[?25hdone\n",
+            "  Created wheel for keras-embed-sim: filename=keras_embed_sim-0.7.0-cp36-none-any.whl size=4676 sha256=5ce29238d0d14a83f1a9ab0813681bc16114f970a4c97045e348296378e8e8ed\n",
+            "  Stored in directory: /root/.cache/pip/wheels/d1/bc/b1/b0c45cee4ca2e6c86586b0218ffafe7f0703c6d07fdf049866\n",
+            "  Building wheel for keras-self-attention (setup.py) ... \u001b[?25l\u001b[?25hdone\n",
+            "  Created wheel for keras-self-attention: filename=keras_self_attention-0.46.0-cp36-none-any.whl size=17278 sha256=34eff2d5e2cb63fd1b4d0843c0dacc4320dbf8b047384d4430fb2c97ff7da785\n",
+            "  Stored in directory: /root/.cache/pip/wheels/d2/2e/80/fec4c05eb23c8e13b790e26d207d6e0ffe8013fad8c6bdd4d2\n",
+            "Successfully built ktrain keras-bert langdetect seqeval syntok gast keras-transformer sacremoses keras-pos-embd keras-multi-head keras-layer-normalization keras-position-wise-feed-forward keras-embed-sim keras-self-attention\n",
+            "\u001b[31mERROR: tensorflow-probability 0.10.0 has requirement gast>=0.3.2, but you'll have gast 0.2.2 which is incompatible.\u001b[0m\n",
+            "Installing collected packages: tensorboard, tensorflow-estimator, gast, tensorflow, scikit-learn, keras-pos-embd, keras-self-attention, keras-multi-head, keras-layer-normalization, keras-position-wise-feed-forward, keras-embed-sim, keras-transformer, keras-bert, langdetect, cchardet, seqeval, sentencepiece, sacremoses, tokenizers, transformers, syntok, whoosh, ktrain\n",
+            "  Found existing installation: tensorboard 2.2.2\n",
+            "    Uninstalling tensorboard-2.2.2:\n",
+            "      Successfully uninstalled tensorboard-2.2.2\n",
+            "  Found existing installation: tensorflow-estimator 2.2.0\n",
+            "    Uninstalling tensorflow-estimator-2.2.0:\n",
+            "      Successfully uninstalled tensorflow-estimator-2.2.0\n",
+            "  Found existing installation: gast 0.3.3\n",
+            "    Uninstalling gast-0.3.3:\n",
+            "      Successfully uninstalled gast-0.3.3\n",
+            "  Found existing installation: tensorflow 2.2.0\n",
+            "    Uninstalling tensorflow-2.2.0:\n",
+            "      Successfully uninstalled tensorflow-2.2.0\n",
+            "  Found existing installation: scikit-learn 0.22.2.post1\n",
+            "    Uninstalling scikit-learn-0.22.2.post1:\n",
+            "      Successfully uninstalled scikit-learn-0.22.2.post1\n",
+            "Successfully installed cchardet-2.1.5 gast-0.2.2 keras-bert-0.84.0 keras-embed-sim-0.7.0 keras-layer-normalization-0.14.0 keras-multi-head-0.27.0 keras-pos-embd-0.11.0 keras-position-wise-feed-forward-0.6.0 keras-self-attention-0.46.0 keras-transformer-0.37.0 ktrain-0.16.3 langdetect-1.0.8 sacremoses-0.0.43 scikit-learn-0.21.3 sentencepiece-0.1.91 seqeval-0.0.12 syntok-1.3.1 tensorboard-2.1.1 tensorflow-2.1.0 tensorflow-estimator-2.1.0 tokenizers-0.7.0 transformers-2.11.0 whoosh-2.7.4\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "Y8hIFvooF4vc",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "# import ktrain and the ktrain.text modules\n",
+        "import ktrain\n",
+        "from ktrain import text"
+      ],
+      "execution_count": 2,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "YBQzPRobF7YR",
+        "colab_type": "code",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 34
+        },
+        "outputId": "02784eb6-6ee9-41de-b220-6883903dd7dd"
+      },
+      "source": [
+        "ktrain.__version__"
+      ],
+      "execution_count": 3,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "'0.16.3'"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 3
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "6z1hsqsNJhvi",
+        "colab_type": "text"
+      },
+      "source": [
+        "# Multiclass Text Classification Using BERT and Keras\n",
+        "In this example, we will use ***ktrain*** ([a lightweight wrapper around Keras](https://github.com/amaiya/ktrain)) to build a model using the dataset employed in the **scikit-learn** tutorial: [Working with Text Data](https://scikit-learn.org/stable/tutorial/text_analytics/working_with_text_data.html).  As in the tutorial, we will sample 4 newsgroups to create a relatively small multiclass text classification dataset.  The objective is to accurately classify each document into one of these four newsgroup topic categories.  This will provide us an opportunity to see **BERT** in action on a relatively smaller training set.  Let's fetch the [20newsgroups dataset ](http://qwone.com/~jason/20Newsgroups/) using scikit-learn."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "-O6BKsySFqzL",
+        "colab_type": "code",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 105
+        },
+        "outputId": "27dd43bf-8a60-48e6-95df-2b2d1e56394d"
+      },
+      "source": [
+        "# fetch the dataset using scikit-learn\n",
+        "categories = ['alt.atheism', 'soc.religion.christian',\n",
+        "             'comp.graphics', 'sci.med']\n",
+        "from sklearn.datasets import fetch_20newsgroups\n",
+        "train_b = fetch_20newsgroups(subset='train',\n",
+        "   categories=categories, shuffle=True, random_state=42)\n",
+        "test_b = fetch_20newsgroups(subset='test',\n",
+        "   categories=categories, shuffle=True, random_state=42)\n",
+        "\n",
+        "print('size of training set: %s' % (len(train_b['data'])))\n",
+        "print('size of validation set: %s' % (len(test_b['data'])))\n",
+        "print('classes: %s' % (train_b.target_names))\n",
+        "\n",
+        "x_train = train_b.data\n",
+        "y_train = train_b.target\n",
+        "x_test = test_b.data\n",
+        "y_test = test_b.target"
+      ],
+      "execution_count": 4,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "Downloading 20news dataset. This may take a few minutes.\n",
+            "Downloading dataset from https://ndownloader.figshare.com/files/5975967 (14 MB)\n"
+          ],
+          "name": "stderr"
+        },
+        {
+          "output_type": "stream",
+          "text": [
+            "size of training set: 2257\n",
+            "size of validation set: 1502\n",
+            "classes: ['alt.atheism', 'comp.graphics', 'sci.med', 'soc.religion.christian']\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "jBpAFYFFIOSz",
+        "colab_type": "text"
+      },
+      "source": [
+        "## STEP 1:  Load and Preprocess the Data\n",
+        "Preprocess the data using the `texts_from_array function` (since the data resides in an array).\n",
+        "If your documents are stored in folders or a CSV file you can use the `texts_from_folder` or `texts_from_csv` functions, respectively."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "ju2LoLr2FwIb",
+        "colab_type": "code",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 297
+        },
+        "outputId": "930ce9b1-13a0-404d-baa7-477796f6d032"
+      },
+      "source": [
+        "(x_train,  y_train), (x_test, y_test), preproc = text.texts_from_array(x_train=x_train, y_train=y_train,\n",
+        "                                                                       x_test=x_test, y_test=y_test,\n",
+        "                                                                       class_names=train_b.target_names,\n",
+        "                                                                       preprocess_mode='bert',\n",
+        "                                                                       maxlen=350, \n",
+        "                                                                       max_features=35000)"
+      ],
+      "execution_count": 5,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "task: text classification\n",
+            "downloading pretrained BERT model (uncased_L-12_H-768_A-12.zip)...\n",
+            "[██████████████████████████████████████████████████]\n",
+            "extracting pretrained BERT model...\n",
+            "done.\n",
+            "\n",
+            "cleanup downloaded zip...\n",
+            "done.\n",
+            "\n",
+            "preprocessing train...\n",
+            "language: en\n"
+          ],
+          "name": "stdout"
+        },
+        {
+          "output_type": "display_data",
+          "data": {
+            "text/html": [
+              "done."
+            ],
+            "text/plain": [
+              "<IPython.core.display.HTML object>"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          }
+        },
+        {
+          "output_type": "stream",
+          "text": [
+            "Is Multi-Label? False\n",
+            "preprocessing test...\n",
+            "language: en\n"
+          ],
+          "name": "stdout"
+        },
+        {
+          "output_type": "display_data",
+          "data": {
+            "text/html": [
+              "done."
+            ],
+            "text/plain": [
+              "<IPython.core.display.HTML object>"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          }
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "bxKHrhP3IVyA",
+        "colab_type": "text"
+      },
+      "source": [
+        "## STEP 2:  Load the BERT Model and Instantiate a Learner object"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "szoSlW1HGKWI",
+        "colab_type": "code",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 70
+        },
+        "outputId": "4ee1fb74-2ce9-4c20-b5cb-59aac1652731"
+      },
+      "source": [
+        "# you can disregard the deprecation warnings arising from using Keras 2.2.4 with TensorFlow 1.14.\n",
+        "model = text.text_classifier('bert', train_data=(x_train, y_train), preproc=preproc)\n",
+        "learner = ktrain.get_learner(model, train_data=(x_train, y_train), batch_size=6)"
+      ],
+      "execution_count": 6,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "Is Multi-Label? False\n",
+            "maxlen is 350\n",
+            "done.\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "x631IAqvIlDg",
+        "colab_type": "text"
+      },
+      "source": [
+        "## STEP 3: Train the Model\n",
+        "\n",
+        "We train using one of the three learning rates recommended in the BERT paper: *5e-5*, *3e-5*, or *2e-5*.\n",
+        "Alternatively, the ktrain Learning Rate Finder can be used to find a good learning rate by invoking `learner.lr_find()` and `learner.lr_plot()`, prior to training.\n",
+        "The `learner.fit_onecycle` method employs a [1cycle learning rate policy](https://arxiv.org/pdf/1803.09820.pdf).\n",
+        "\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "ytg-0FTHG7ik",
+        "colab_type": "code",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 246
+        },
+        "outputId": "66e4ae16-f8ab-44ce-d867-d73159798a72"
+      },
+      "source": [
+        "learner.fit_onecycle(2e-5, 4)"
+      ],
+      "execution_count": 7,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "\n",
+            "\n",
+            "begin training using onecycle policy with max lr of 2e-05...\n",
+            "Train on 2257 samples\n",
+            "Epoch 1/4\n",
+            "2257/2257 [==============================] - 368s 163ms/sample - loss: 0.6504 - accuracy: 0.7457\n",
+            "Epoch 2/4\n",
+            "2257/2257 [==============================] - 350s 155ms/sample - loss: 0.1488 - accuracy: 0.9459\n",
+            "Epoch 3/4\n",
+            "2257/2257 [==============================] - 351s 155ms/sample - loss: 0.0320 - accuracy: 0.9911\n",
+            "Epoch 4/4\n",
+            "2257/2257 [==============================] - 350s 155ms/sample - loss: 0.0094 - accuracy: 0.9982\n"
+          ],
+          "name": "stdout"
+        },
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "<tensorflow.python.keras.callbacks.History at 0x7f97400bc0b8>"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 7
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "lMySkTNDSyyM",
+        "colab_type": "text"
+      },
+      "source": [
+        "We can use the `learner.validate` method to test our model against the validation set.\n",
+        "As we can see, BERT achieves a **96%** accuracy, which is quite a bit higher than the 91% accuracy achieved by SVM in the [scikit-learn tutorial](https://scikit-learn.org/stable/tutorial/text_analytics/working_with_text_data.html)."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "XQ4beXIyHdYB",
+        "colab_type": "code",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 281
+        },
+        "outputId": "5eecbabd-6077-4194-e2a8-12fa31ac284c"
+      },
+      "source": [
+        "learner.validate(val_data=(x_test, y_test), class_names=train_b.target_names)"
+      ],
+      "execution_count": 8,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "                        precision    recall  f1-score   support\n",
+            "\n",
+            "           alt.atheism       0.96      0.88      0.92       319\n",
+            "         comp.graphics       0.98      0.96      0.97       389\n",
+            "               sci.med       0.96      0.98      0.97       396\n",
+            "soc.religion.christian       0.92      0.99      0.96       398\n",
+            "\n",
+            "              accuracy                           0.96      1502\n",
+            "             macro avg       0.96      0.95      0.95      1502\n",
+            "          weighted avg       0.96      0.96      0.96      1502\n",
+            "\n"
+          ],
+          "name": "stdout"
+        },
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "array([[281,   2,  10,  26],\n",
+              "       [  9, 373,   4,   3],\n",
+              "       [  2,   3, 387,   4],\n",
+              "       [  2,   1,   1, 394]])"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 8
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "FdBJBZl8TqkR",
+        "colab_type": "text"
+      },
+      "source": [
+        "## How to Use Our Trained BERT Model\n",
+        "\n",
+        "We can call the `learner.get_predictor` method to obtain a Predictor object capable of making predictions on new raw data."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "xCPyMtk3L1qR",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "predictor = ktrain.get_predictor(learner.model, preproc)"
+      ],
+      "execution_count": 9,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "fcnpWw0oSUwb",
+        "colab_type": "code",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 34
+        },
+        "outputId": "d5465ca1-ffa2-4bf4-a1b4-7843732dbca7"
+      },
+      "source": [
+        "predictor.get_classes()"
+      ],
+      "execution_count": 10,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "['alt.atheism', 'comp.graphics', 'sci.med', 'soc.religion.christian']"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 10
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "xEtfzxqzSW_k",
+        "colab_type": "code",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 34
+        },
+        "outputId": "7ed0153a-8c1e-4414-8893-f75722c0e479"
+      },
+      "source": [
+        "predictor.predict(test_b.data[0:1])"
+      ],
+      "execution_count": 11,
+      "outputs": [
+        {
+          "output_type": "display_data",
+          "data": {
+            "text/html": [
+              ""
+            ],
+            "text/plain": [
+              "<IPython.core.display.HTML object>"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          }
+        },
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "['sci.med']"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 11
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "yvaTCPafSrtT",
+        "colab_type": "code",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 351
+        },
+        "outputId": "5534ab7f-a048-41bb-f412-3e3f32fd35ce"
+      },
+      "source": [
+        "# we can visually verify that our prediction of 'sci.med' for this document is correct\n",
+        "print(test_b.data[0])"
+      ],
+      "execution_count": 12,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "From: brian@ucsd.edu (Brian Kantor)\n",
+            "Subject: Re: HELP for Kidney Stones ..............\n",
+            "Organization: The Avant-Garde of the Now, Ltd.\n",
+            "Lines: 12\n",
+            "NNTP-Posting-Host: ucsd.edu\n",
+            "\n",
+            "As I recall from my bout with kidney stones, there isn't any\n",
+            "medication that can do anything about them except relieve the pain.\n",
+            "\n",
+            "Either they pass, or they have to be broken up with sound, or they have\n",
+            "to be extracted surgically.\n",
+            "\n",
+            "When I was in, the X-ray tech happened to mention that she'd had kidney\n",
+            "stones and children, and the childbirth hurt less.\n",
+            "\n",
+            "Demerol worked, although I nearly got arrested on my way home when I barfed\n",
+            "all over the police car parked just outside the ER.\n",
+            "\t- Brian\n",
+            "\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "VvEfCWmIUdw6",
+        "colab_type": "code",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 34
+        },
+        "outputId": "2dd739dc-2282-4d8c-9171-780cee91f3d7"
+      },
+      "source": [
+        "# we predicted the correct label\n",
+        "print(test_b.target_names[test_b.target[0]])"
+      ],
+      "execution_count": 13,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "sci.med\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "cStbMM0Uv48d",
+        "colab_type": "text"
+      },
+      "source": [
+        "The `predictor.save` and `ktrain.load_predictor` methods can be used to save the Predictor object to disk and reload it at a later time to make predictions on new data."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "vJCmD8lNSvN0",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "# let's save the predictor for later use\n",
+        "predictor.save('/tmp/my_predictor')"
+      ],
+      "execution_count": 14,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "MAdRe_3bar3q",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "# reload the predictor\n",
+        "reloaded_predictor = ktrain.load_predictor('/tmp/my_predictor')"
+      ],
+      "execution_count": 15,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "EHXgnfulazvQ",
+        "colab_type": "code",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 34
+        },
+        "outputId": "6500aca7-23a7-4c74-80d2-44a952e61fa8"
+      },
+      "source": [
+        "# make a prediction on the same document to verify it still works\n",
+        "reloaded_predictor.predict(test_b.data[0:1])"
+      ],
+      "execution_count": 16,
+      "outputs": [
+        {
+          "output_type": "display_data",
+          "data": {
+            "text/html": [
+              ""
+            ],
+            "text/plain": [
+              "<IPython.core.display.HTML object>"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          }
+        },
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "['sci.med']"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 16
+        }
+      ]
+    }
+  ]
+}
