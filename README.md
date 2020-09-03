@@ -1,7 +1,7 @@
-<h1>2020 - Bigdata _LeeJaeKeun<h1>
+<h1>2020 - Bigdata _<h3>LeeJaeKeun<h3><h1>
 <br/>
   
-<h2></h2>
+<h3>빅데이터 & 인공지능</h3>
 P1 인공지능 개요 실습.pdf
 P1-2 IBM 클라우드 개요 실습.pdf
 <br>
