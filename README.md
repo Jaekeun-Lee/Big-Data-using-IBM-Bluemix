@@ -1,4 +1,5 @@
-<h1>2020 - Bigdata _<h3>LeeJaeKeun<h3><h1>
+<h1>2020 - Bigdata<h1>
+<h3>2020.03 ~ 2020.06 _ LeeJaeKeun<h3>
 <br/>
   
 <h3>빅데이터 & 인공지능</h3>
