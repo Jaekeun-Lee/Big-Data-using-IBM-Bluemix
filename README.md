@@ -175,19 +175,15 @@ We are going to use Watson Studio to create a project in which we are planning t
 
 ## Conclusion
 In this tutorial, we tried to explain how to train your model with IBM Watson’s service: AutoAI. Along with this training process, you have learned how to deploy and test the models. You also had an understanding of how to make an API call for the deployed model via Notebook. 
-
-
-
-
-                           
-
-
-
-
-
-
-
-
+   
+      
+         
+            
+               
+                  
+                     
+   
+   
 <h1>2020 - Bigdata<h1>
 <h3>2020.03 ~ 2020.06 _ LeeJaeKeun<h3>
 <br/>
